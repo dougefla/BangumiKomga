@@ -5,6 +5,9 @@
 
 
 from api.komgaApi import *
+from pypinyin import slug, Style
+
+from config.config import SORT_TITLE
 
 
 def __setTags(komga_metadata, bangumi_metadata):
@@ -139,6 +142,30 @@ def __setTitle(komga_metadata, bangumi_metadata):
     else:
         komga_metadata.title = bangumi_metadata["name"]
 
+def is_english_char(c):
+    return 'A' <= c <= 'Z' or 'a' <= c <= 'z'
+
+def __setTitleSort(komga_metadata, manga_filename):
+    '''
+    排序标题，额外添加首字母
+    必须在修改标题(__setTitle)之后才能调用
+    '''
+    komga_metadata.titleSort = manga_filename
+    if SORT_TITLE:
+        # 如果排序标题第一个为字母，则跳过
+        if is_english_char(manga_filename[0]):
+            komga_metadata.titleSort = manga_filename
+            return
+        # 如果标题第一个为字母，则直接使用标题第一个字母
+        if is_english_char(komga_metadata.title[0]):
+            getFirstLetter=komga_metadata.title[0].upper()
+        # 中文转拼音首字母
+        else:
+            getFirstLetter=slug(komga_metadata.title[0], errors='ignore', style=Style.FIRST_LETTER, separator='').upper()
+        if getFirstLetter:
+            komga_metadata.titleSort = getFirstLetter+manga_filename
+    
+
 
 def __setSummary(komga_metadata, bangumi_metadata):
     '''
@@ -213,6 +240,9 @@ def setKomangaSeriesMetadata(bangumiMetadata, mangaFileName, bgm):
 
     # title
     __setTitle(komangaSeriesMetadata, bangumiMetadata)
+    
+    # titleSort
+    __setTitleSort(komangaSeriesMetadata, mangaFileName)
 
     komangaSeriesMetadata.isvalid = True
     return komangaSeriesMetadata

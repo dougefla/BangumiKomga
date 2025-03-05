@@ -106,7 +106,8 @@ def refresh_metadata():
             "ageRating": komga_metadata.ageRating,
             "links": komga_metadata.links,
             "totalBookCount": komga_metadata.totalBookCount,
-            "language": komga_metadata.language
+            "language": komga_metadata.language,
+            "titleSort": komga_metadata.titleSort
         }
 
         # Update the metadata for the series on komga

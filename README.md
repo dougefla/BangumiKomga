@@ -42,6 +42,7 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 - [x] ~~区分单册和单话~~👉未匹配的书也会重新排序
 - [x] ~~添加同人志~~👉推荐使用[LANraragi](https://github.com/Difegue/LANraragi)
 - [x] 可使用 Bangumi 图片替换系列、单册封面
+- [x] 排序标题，支持字母导航
 
 处理逻辑见[DESIGN](docs/DESIGN.md)
 
@@ -141,6 +142,12 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 - `USE_BANGUMI_THUMBNAIL`: 设置为`True`且未曾上传过系列海报时，使用 Bangumi 封面替换系列海报
     - 旧海报为 Komga 生成的缩略图，因此还可以通过调整`Komga 服务器设置->缩略图尺寸（默认 300px，超大 1200px）`来获得更清晰的封面
     - `USE_BANGUMI_THUMBNAIL_FOR_BOOK`: 设置为`True`且未曾上传过单册海报时，使用 Bangumi 封面替换单册海报
+
+- `SORT_TITLE`：设置为`True`时，在刷新元数据后会在系列元数据-排序标题前添加一个首字母用于导航
+  - 此为临时方案，详细讨论见：
+    - https://github.com/gotson/komga/discussions/1883
+    - https://komga.org/docs/guides/edit-metadata#sort-titles
+    - [chu-shen/BangumiKomga#37](https://github.com/chu-shen/BangumiKomga/issues/37)
 
 ## 如何修正错误元数据
 
