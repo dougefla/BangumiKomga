@@ -148,6 +148,7 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
     - https://github.com/gotson/komga/discussions/1883
     - https://komga.org/docs/guides/edit-metadata#sort-titles
     - [chu-shen/BangumiKomga#37](https://github.com/chu-shen/BangumiKomga/issues/37)
+  - 如果要对此功能启用前的系列进行修改，请在`scripts`目录下手动运行一次`python sortTitleByLetter.py`
 
 ## 如何修正错误元数据
 
