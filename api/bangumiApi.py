@@ -72,7 +72,7 @@ class BangumiApi:
             response_json = response.json()
         except ValueError as e:
             # bangumi无结果但返回正常
-            logger.error(f"404 Not Found")
+            logger.warning(f"{query}: 404 Not Found")
             return []
         else:
             # e.g. 川瀬绫 -> {"results":1,"list":null}
