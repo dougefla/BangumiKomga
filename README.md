@@ -154,6 +154,8 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 人工修正错误元数据可以使用`cbl(Correct Bangumi Link)`，只需在系列元数据的链接中填入`cbl`和该漫画系列的 bangumi 地址。将强制使用此链接，不再进行刮削。
 
+![cbl](img/cbl.png)
+
 下面分三种情况说明具体操作：
 
 - 自此系列添加至 komga 后还未运行过此程序：
