@@ -117,6 +117,7 @@ class BangumiApi:
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             logger.error(f"An error occurred: {e}")
+            logger.error(f"请检查 {subject_id} 是否填写正确；或属于 NSFW，但并未配置 BANGUMI_ACCESS_TOKEN")
             return []
         return response.json()
 

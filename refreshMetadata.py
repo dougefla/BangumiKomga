@@ -49,7 +49,10 @@ def refresh_metadata():
                 metadata = bgm.get_subject_metadata(subject_id)
                 force_refresh_flag=True
                 break
-
+        if not metadata:
+            logger.warning("Failed to get metadata by cbl: "+series_name)
+            continue
+        
         if not force_refresh_flag:
             # 找到对应的series_record
             series_record = next(
