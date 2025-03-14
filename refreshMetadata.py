@@ -45,13 +45,11 @@ def refresh_metadata():
         for link in series['metadata']['links']:
             if link['label'].lower() == "cbl":
                 subject_id = link['url'].split("/")[-1]
+                logger.debug("use cbl "+subject_id+" for "+series_name)
                 # Get the metadata for the series from bangumi
                 metadata = bgm.get_subject_metadata(subject_id)
                 force_refresh_flag=True
                 break
-        if not metadata:
-            logger.warning("Failed to get metadata by cbl: "+series_name)
-            continue
         
         if not force_refresh_flag:
             # 找到对应的series_record
@@ -73,6 +71,7 @@ def refresh_metadata():
 
         # Use the bangumi API to search for the series by title on komga
         if subject_id == None:
+            logger.debug("search for "+series_name+"in bangumi")
             title=parse_title.get_title(series_name)
             if title == None:
                 failed_count, failed_comic = record_series_status(
@@ -88,7 +87,11 @@ def refresh_metadata():
                     conn, series_id, subject_id, 0, series_name, "no subject in bangumi", failed_count, failed_comic)
                 failed_series_ids.append(series_id)
                 continue
-
+        
+        if not metadata:
+            logger.warning("Failed to get metadata: "+series_name)
+            continue
+        
         komga_metadata = processMetadata.setKomangaSeriesMetadata(
             metadata, series_name, bgm)
 
