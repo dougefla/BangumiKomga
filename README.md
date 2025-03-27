@@ -83,7 +83,7 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
         volumes:
         - /path/BangumiKomga/config.py:/app/config/config.py   # see step.2
         - /path/BangumiKomga/recordsRefreshed.db:/app/recordsRefreshed.db
-        - /path/BangumiKomga/refreshMetadata.log:/app/refreshMetadata.log
+        - /path/BangumiKomga/logs:/app/logs
     ```
 2. Rename `config/config.template.py` to `config/config.py` and edit the url, email and password to match the ones of your komga instance (User needs to have permission to edit the metadata).
 
