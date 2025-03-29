@@ -53,7 +53,7 @@ class BangumiApi:
                         score, fuzz.ratio(item["value"], target))
         return score
         
-    def search_subjects(self, query):
+    def search_subjects(self, query, threshold=80):
         '''
         获取搜索结果，并移除非漫画系列。返回具有完整元数据的条目
         '''
@@ -100,10 +100,20 @@ class BangumiApi:
                         single_flag = False
                         break
                 if single_flag:
-                    sort_results.append(manga_metadata)
+                    # 计算得分
+                    score = self.compute_name_score_by_fuzzy(
+                        manga_metadata["name"],
+                        manga_metadata.get("name_cn", ""),
+                        manga_metadata['infobox'],
+                        query
+                    )
+                    # 仅添加得分超过阈值的条目
+                    if score >= threshold:
+                        manga_metadata['fuzzScore'] = score
+                        sort_results.append(manga_metadata)
 
-        sort_results.sort(key=lambda x: self.compute_name_score_by_fuzzy(
-            x["name"], x.get("name_cn", ""), x['infobox'], query),reverse=True)
+        # 按得分降序排序
+        sort_results.sort(key=lambda x: x['fuzzScore'], reverse=True)
 
         return sort_results
 

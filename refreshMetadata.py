@@ -78,7 +78,7 @@ def refresh_metadata():
                     conn, series_id, subject_id, 0, series_name, "None", failed_count, failed_comic)
                 failed_series_ids.append(series_id)
                 continue
-            search_results = bgm.search_subjects(title)
+            search_results = bgm.search_subjects(title, FUZZ_SCORE_THRESHOLD)
             if len(search_results) > 0:
                 subject_id = search_results[0]['id']
                 metadata = search_results[0]

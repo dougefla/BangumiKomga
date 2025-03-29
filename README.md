@@ -43,6 +43,7 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 - [x] ~~添加同人志~~👉推荐使用[LANraragi](https://github.com/Difegue/LANraragi)
 - [x] 可使用 Bangumi 图片替换系列、单册封面
 - [x] 排序标题，支持字母导航
+- [x] 提高匹配准确率：使用 FUZZ 对 bgm 搜索结果进行过滤和排序
 
 处理逻辑见[DESIGN](docs/DESIGN.md)
 
@@ -50,7 +51,6 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 - [ ] 使用[bangumi/Archive](https://github.com/bangumi/Archive)离线数据代替联网查询
 - [ ] 限制联网查询频率
-- [ ] 提高 Bangumi 搜索结果匹配准确率，如：排序、评分
 - [ ] 更新 Komga 封面时，判断：类型（'GENERATED'）、大小
 - [ ] 重构元数据更新范围及覆盖逻辑
 - [ ] 增强文件名解析
@@ -149,6 +149,11 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
     - https://komga.org/docs/guides/edit-metadata#sort-titles
     - [chu-shen/BangumiKomga#37](https://github.com/chu-shen/BangumiKomga/issues/37)
   - 如果要对此功能启用前的系列进行修改，请在`scripts`目录下手动运行一次`python sortTitleByLetter.py`
+
+- `FUZZ_SCORE_THRESHOLD`：满分 100，默认值`80`。用于过滤搜索结果
+  - 值越小匹配到错误元数据的可能性越大
+  - 值越大匹配失败的可能性越大
+  - 默认值`80`并不是一个经验值，有更好的评分请开 issue
 
 ## 如何修正错误元数据
 
