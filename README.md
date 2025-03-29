@@ -125,13 +125,12 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 > [!TIP]
 >
-> - 在此收藏中按照[如何修正错误元数据](#如何修正错误元数据)操作，启用`RECHECK_FAILED_SERIES`，然后填入`cbl`~~治疗强迫症~~
-> - 如果要将所有失败的系列都添加至收藏，则需要将`RECHECK_FAILED_SERIES`配置为`True`
+> - 在此收藏中按照[如何修正错误元数据](#如何修正错误元数据)操作即可~~治疗强迫症~~
+> - 如果要将之前所有失败的系列都添加至收藏，则需要将`RECHECK_FAILED_SERIES`配置为`True`
 
 ## 其他配置说明
 
 - `RECHECK_FAILED_SERIES`: 重新检查刷新元数据失败的系列
-  - 建议搭配`cbl`使用
   - 其他情况下建议设置为`False`，可缩短程序运行时间
 
 - `RECHECK_FAILED_BOOKS`: 重新检查刷新元数据失败的书
@@ -156,7 +155,7 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 ## 如何修正错误元数据
 
-人工修正错误元数据可以使用`cbl(Correct Bangumi Link)`，只需在系列元数据的链接中填入`cbl`和该漫画系列的 bangumi 地址。将强制使用此链接，不再进行刮削。
+人工修正错误元数据可以使用`cbl(Correct Bangumi Link)`，只需在系列元数据的链接中填入`cbl`和该漫画系列的 bangumi 地址。将强制使用此链接，不再进行刮削。与`RECHECK_FAILED_SERIES`配置无关
 
 ![cbl](img/cbl.png)
 
@@ -174,7 +173,6 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 - 系列元数据更新错误，即匹配错误，刮削成其他条目：
   - 填入上面提到的信息
-  - 不再需要记录 id，`FORCE_REFRESH_LIST`配置已被删除
   - 正常执行`python refreshMetadata.py`
 
 ## 为小说添加元数据
