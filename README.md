@@ -55,7 +55,6 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 - [ ] 重构元数据更新范围及覆盖逻辑
 - [ ] 增强文件名解析
 
-
 ## Requirements
 
 - A Komga instance with access to the admin account
@@ -64,12 +63,13 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 
 ## 快速开始
 
-> [!WARNING] 
+> [!WARNING]
+>
 > Executing this program will result in the loss of old metadata for series and books\
 > 执行此程序将导致书籍系列及单册的旧元数据丢失
 
-
 1. Install the requirements using
+
     ```shell
     # prepare the environment on your own
     pip3 install -r install/requirements.txt
@@ -85,20 +85,19 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
         - /path/BangumiKomga/recordsRefreshed.db:/app/recordsRefreshed.db
         - /path/BangumiKomga/logs:/app/logs
     ```
+
 2. Rename `config/config.template.py` to `config/config.py` and edit the url, email and password to match the ones of your komga instance (User needs to have permission to edit the metadata).
 
-    `BANGUMI_ACCESS_TOKEN` （可选）用于读取NSFW条目，在 https://next.bgm.tv/demo/access-token 创建个人令牌
+    `BANGUMI_ACCESS_TOKEN` （可选）用于读取NSFW条目，在 <https://next.bgm.tv/demo/access-token> 创建个人令牌
 
     `KOMGA_LIBRARY_LIST` 处理指定库中的书籍系列。komga界面点击库（对应链接）即可获得，形如：`'0B79XX3NP97K9'`，对应地址：`http://IP:PORT/libraries/0B79XX3NP97K9/series`。填写时以英文引号`''`包裹，英文逗号`,`分割。与`KOMGA_COLLECTION_LIST`不能同时使用
 
     `KOMGA_COLLECTION_LIST` 处理指定收藏中的书籍系列。komga界面点击收藏（对应链接）即可获得，形如：`'0B79XX3NP97K9'`。填写时以英文引号`''`包裹，英文逗号`,`分割。与`KOMGA_LIBRARY_LIST`不能同时使用
 
-        Tips: 可以搭配`同步阅读进度`实现仅同步部分书籍系列的进度
-    
-
 3. Run the script using `python refreshMetadata.py`, or `docker start bangumikomga`(The container automatically closes after execution.)
 
 > [!TIP]
+>
 > - 如果漫画系列数量上千，请考虑使用[bangumi/Archive](https://github.com/bangumi/Archive)离线数据代替联网查询
 > - 可以搭配工具定时执行，比如[ofelia](https://github.com/mcuadros/ofelia)
 
@@ -109,15 +108,14 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 - `NOTIF_TYPE_ENABLE`: 启用的消息通知类型
 
 - Gotify
-    - `NOTIF_GOTIFY_ENDPOINT`: Gotify base URL
-    - `NOTIF_GOTIFY_TOKEN`: Application token
+  - `NOTIF_GOTIFY_ENDPOINT`: Gotify base URL
+  - `NOTIF_GOTIFY_TOKEN`: Application token
 
 - Webhook
-    - `NOTIF_WEBHOOK_ENDPOINT`: URL of the HTTP request. 如飞书中创建自定义机器人时的 webhook 地址
+  - `NOTIF_WEBHOOK_ENDPOINT`: URL of the HTTP request. 如飞书中创建自定义机器人时的 webhook 地址
 
 - Healthchecks
-    - `NOTIF_HEALTHCHECKS_ENDPOINT`: URL of the HTTP request
-
+  - `NOTIF_HEALTHCHECKS_ENDPOINT`: URL of the HTTP request
 
 ## 创建失败收藏（可选）
 
@@ -126,27 +124,28 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 每次运行都会根据**本次**运行数据重新创建此收藏（无失败则跳过）。
 
 > [!TIP]
+>
 > - 在此收藏中按照[如何修正错误元数据](#如何修正错误元数据)操作，启用`RECHECK_FAILED_SERIES`，然后填入`cbl`~~治疗强迫症~~
 > - 如果要将所有失败的系列都添加至收藏，则需要将`RECHECK_FAILED_SERIES`配置为`True`
 
 ## 其他配置说明
 
 - `RECHECK_FAILED_SERIES`: 重新检查刷新元数据失败的系列
-    - 建议搭配`cbl`使用
-    - 其他情况下建议设置为`False`，可缩短程序运行时间
+  - 建议搭配`cbl`使用
+  - 其他情况下建议设置为`False`，可缩短程序运行时间
 
 - `RECHECK_FAILED_BOOKS`: 重新检查刷新元数据失败的书
-    - ~~意义不明的参数~~，建议设置为`False`，可缩短程序运行时间
-    - 如果刷新书时，bangumi 数据不完整，则可以在数据补充后使用此参数修正此书元数据
+  - ~~意义不明的参数~~，建议设置为`False`，可缩短程序运行时间
+  - 如果刷新书时，bangumi 数据不完整，则可以在数据补充后使用此参数修正此书元数据
 
 - `USE_BANGUMI_THUMBNAIL`: 设置为`True`且未曾上传过系列海报时，使用 Bangumi 封面替换系列海报
-    - 旧海报为 Komga 生成的缩略图，因此还可以通过调整`Komga 服务器设置->缩略图尺寸（默认 300px，超大 1200px）`来获得更清晰的封面
-    - `USE_BANGUMI_THUMBNAIL_FOR_BOOK`: 设置为`True`且未曾上传过单册海报时，使用 Bangumi 封面替换单册海报
+  - 旧海报为 Komga 生成的缩略图，因此还可以通过调整`Komga 服务器设置->缩略图尺寸（默认 300px，超大 1200px）`来获得更清晰的封面
+  - `USE_BANGUMI_THUMBNAIL_FOR_BOOK`: 设置为`True`且未曾上传过单册海报时，使用 Bangumi 封面替换单册海报
 
 - `SORT_TITLE`：设置为`True`时，在刷新元数据后会在系列元数据-排序标题前添加一个首字母用于导航
   - 此为临时方案，详细讨论见：
-    - https://github.com/gotson/komga/discussions/1883
-    - https://komga.org/docs/guides/edit-metadata#sort-titles
+    - <https://github.com/gotson/komga/discussions/1883>
+    - <https://komga.org/docs/guides/edit-metadata#sort-titles>
     - [chu-shen/BangumiKomga#37](https://github.com/chu-shen/BangumiKomga/issues/37)
   - 如果要对此功能启用前的系列进行修改，请在`scripts`目录下手动运行一次`python sortTitleByLetter.py`
 
@@ -164,27 +163,25 @@ This metadata then gets converted to be compatible to Komga and then gets sent t
 下面分三种情况说明具体操作：
 
 - 自此系列添加至 komga 后还未运行过此程序：
-    - 填入上面提到的信息
-    - 正常执行`python refreshMetadata.py`
+  - 填入上面提到的信息
+  - 正常执行`python refreshMetadata.py`
 
 - 系列元数据更新失败，即「标题」与「排序标题」**一样**：
-    - 填入上面提到的信息
-    - 如果未填写，也可以尝试使用最新版本重新匹配之前失败的系列
-      - 只需将`RECHECK_FAILED_SERIES`配置为`True`，重新匹配失败的系列；将`RECHECK_FAILED_BOOKS`配置为`True`，重新匹配失败的单行本
-    - 正常执行`python refreshMetadata.py`
+  - 填入上面提到的信息
+  - 如果未填写，也可以尝试使用最新版本重新匹配之前失败的系列
+    - 只需将`RECHECK_FAILED_SERIES`配置为`True`，重新匹配失败的系列；将`RECHECK_FAILED_BOOKS`配置为`True`，重新匹配失败的单行本
+  - 正常执行`python refreshMetadata.py`
 
 - 系列元数据更新错误，即匹配错误，刮削成其他条目：
-    - 填入上面提到的信息
-    - 不再需要记录 id，`FORCE_REFRESH_LIST`配置已被删除
-    - 正常执行`python refreshMetadata.py`
-
+  - 填入上面提到的信息
+  - 不再需要记录 id，`FORCE_REFRESH_LIST`配置已被删除
+  - 正常执行`python refreshMetadata.py`
 
 ## 为小说添加元数据
 
 Komga 并没有区分漫画与小说。
 
 可以尝试修改代码，使其**只应用**于 Komga 的**小说库**：将`bangumiApi.py`中的`manga_metadata["platform"] != "小说"`修改为`manga_metadata["platform"] == "小说"`
-
 
 ## 同步阅读进度
 
@@ -195,6 +192,7 @@ Komga 并没有区分漫画与小说。
 > 推荐使用Tachiyomi更新阅读进度👉[Tracking | Tachiyomi](https://tachiyomi.org/help/guides/tracking/#what-is-tracking)
 
 **同步内容：**
+
 - 仅同步卷数，不同步话数
 
 1. 步骤同`刷新元数据`
@@ -208,12 +206,10 @@ Komga 并没有区分漫画与小说。
 
 `[漫画名称][作者][出版社][卷数][其他1][其他2]`
 
-
-
 - [漫画名称]：以漫画封面实际名称为准，繁体不必转简体。
 - [作者]：作者名字亦以单行本所给名字为准
-    - 繁体不转为简体，若有日文假名亦保留，如[島崎讓]、[天王寺きつね]；
-    - 若作者为多人，则以`×`或`&`符号连接各作者（**注意：不是英文`x`**），将作画作者列于最后，如[矢立肇×有贺ヒトシ]、[手塚治虫×浦沢直树]、[堀田由美×小畑健]。
+  - 繁体不转为简体，若有日文假名亦保留，如[島崎讓]、[天王寺きつね]；
+  - 若作者为多人，则以`×`或`&`符号连接各作者（**注意：不是英文`x`**），将作画作者列于最后，如[矢立肇×有贺ヒトシ]、[手塚治虫×浦沢直树]、[堀田由美×小畑健]。
 
 - [出版社]：例如[玉皇朝]、[青文]。
 - [卷数]：例如[Vol.01-Vol.12]。
@@ -221,7 +217,7 @@ Komga 并没有区分漫画与小说。
 
 例如：
 
-```
+```txt
 [碧蓝之海][井上堅二×吉岡公威][Vol.01-Vol.18]
 [相合之物][浅野伦][Vol.01-Vol.13]
 [海王但丁][皆川亮二×泉福朗][Vol.01-Vol.13][境外版]
@@ -237,12 +233,12 @@ _命名建议修改自某喵_
 
 本项目部分代码及思路来自[Pfuenzle/AnisearchKomga](https://github.com/Pfuenzle/AnisearchKomga)，部分代码生成自[chatgpt](https://chat.openai.com/)，在此表示感谢！
 
-
 语料库数据来源，感谢公开：
+
 - `bangumi_person.txt`文件提取自[bangumi/Archive](https://github.com/bangumi/Archive)
 - `Japanese_Names_Corpus（18W）.txt`文件来自[wainshine/Chinese-Names-Corpus](https://github.com/wainshine/Chinese-Names-Corpus)
 
-
 另外，也感谢以下优秀项目：
+
 - [gotson/komga](https://github.com/gotson/komga)
 - [bangumi/api](https://github.com/bangumi/api)
