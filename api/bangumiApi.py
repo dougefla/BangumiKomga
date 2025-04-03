@@ -57,6 +57,8 @@ class BangumiApi:
         '''
         获取搜索结果，并移除非漫画系列。返回具有完整元数据的条目
         '''
+        # 正面例子：魔女與使魔 -> 魔女与使魔，325236
+        # 反面例子：君は淫らな僕の女王 -> 君は淫らな仆の女王，47331
         query = convert(query, 'zh-cn')
         url = f"{self.BASE_URL}/search/subject/{quote_plus(query)}?responseGroup=small&type=1&max_results=25"
         # TODO 处理'citrus+ ~柑橘味香气plus~'
@@ -90,27 +92,21 @@ class BangumiApi:
                 continue
             # bangumi书籍类型包括：漫画、小说、画集、其他
             # 由于komga不支持小说文字的读取，这里直接忽略`小说`类型，避免返回错误结果
-            if manga_metadata["platform"] != "小说":
-                single_flag = True
-                for relation in self.get_related_subjects(manga_id):
-                    # bangumi书籍系列包括：系列、单行本
-                    # 此处需去除漫画系列的单行本，避免干扰
-                    # bangumi数据中存在单行本与系列未建立联系的情况
-                    if relation["relation"] == "系列":
-                        single_flag = False
-                        break
-                if single_flag:
-                    # 计算得分
-                    score = self.compute_name_score_by_fuzzy(
-                        manga_metadata["name"],
-                        manga_metadata.get("name_cn", ""),
-                        manga_metadata['infobox'],
-                        query
-                    )
-                    # 仅添加得分超过阈值的条目
-                    if score >= threshold:
-                        manga_metadata['fuzzScore'] = score
-                        sort_results.append(manga_metadata)
+            # bangumi书籍系列包括：系列、单行本
+            # 此处需去除漫画系列的单行本，避免干扰，官方 API 已添加 series 字段（是否系列，仅对书籍类型的条目有效）
+            # bangumi数据中存在单行本与系列未建立联系的情况
+            if manga_metadata["platform"] != "小说" and manga_metadata["series"]:
+                # 计算得分
+                score = self.compute_name_score_by_fuzzy(
+                    manga_metadata["name"],
+                    manga_metadata.get("name_cn", ""),
+                    manga_metadata['infobox'],
+                    query
+                )
+                # 仅添加得分超过阈值的条目
+                if score >= threshold:
+                    manga_metadata['fuzzScore'] = score
+                    sort_results.append(manga_metadata)
 
         # 按得分降序排序
         sort_results.sort(key=lambda x: x['fuzzScore'], reverse=True)
