@@ -131,7 +131,22 @@ def __setAgeRating(komga_metadata, bangumi_metadata):
     '''
     分级
     '''
-    if bangumi_metadata["nsfw"] == True:
+    RATING_RULES=[
+        {'tags':{'R18'},'min_count':10, 'rating': 18},
+        {'tags':{'R15','工口','卖肉','福利'},'min_count':3, 'rating': 15},
+    ]
+
+    ageRatings = []
+    for tags in bangumi_metadata['tags']:
+        for rule in RATING_RULES:
+            if tags['name'] in rule['tags'] and tags['count'] >= rule['min_count']:
+                ageRatings.append(rule['rating'])
+                break
+
+    if ageRatings:
+        komga_metadata.ageRating = max(ageRatings)
+
+    if bangumi_metadata["nsfw"]:
         komga_metadata.ageRating = 18
 
 
