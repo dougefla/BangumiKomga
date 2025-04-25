@@ -48,8 +48,8 @@ def refresh_metadata():
         force_refresh_flag = False
         for link in series["metadata"]["links"]:
             if link["label"].lower() == "cbl":
-                subject_id = link["url"].split("/")[-1]
-                logger.debug("use cbl " + subject_id + " for " + series_name)
+                subject_id = int(link["url"].split("/")[-1])
+                logger.debug("use cbl %s for %s", subject_id, series_name)
                 # Get the metadata for the series from bangumi
                 metadata = bgm.get_subject_metadata(subject_id)
                 force_refresh_flag = True
@@ -73,12 +73,12 @@ def refresh_metadata():
 
                 # recheck or skip failed series
                 elif series_record[2] == 0 and not RECHECK_FAILED_SERIES:
-                    logger.debug("skip falied series: " + series_name)
+                    logger.debug("skip falied series: %s", series_name)
                     continue
 
         # Use the bangumi API to search for the series by title on komga
         if subject_id == None:
-            logger.debug("search for " + series_name + "in bangumi")
+            logger.debug("search for %s in bangumi", series_name)
             title = parse_title.get_title(series_name)
             if title == None:
                 failed_count, failed_comic = record_series_status(
@@ -110,7 +110,7 @@ def refresh_metadata():
                 continue
 
         if not metadata:
-            logger.warning("Failed to get metadata: " + series_name)
+            logger.warning("Failed to get metadata: %s", series_name)
             continue
 
         komga_metadata = processMetadata.setKomangaSeriesMetadata(
@@ -169,10 +169,10 @@ def refresh_metadata():
                     series_id, thumbnail
                 )
                 if replace_thumbnail_result:
-                    logger.debug("replace thumbnail for series: " + series_name)
+                    logger.debug("replace thumbnail for series: %s", series_name)
                 else:
                     logger.error(
-                        "Failed to replace thumbnail for series: " + series_name
+                        "Failed to replace thumbnail for series: %s", series_name
                     )
         else:
             failed_count, failed_comic = record_series_status(
@@ -207,13 +207,11 @@ def refresh_metadata():
         ]
         # 用all_failed_series_ids 创建 FAILED_COLLECTION
         if komga.replace_collection(collection_name, True, all_failed_series_ids):
-            logger.info("Successfully replace collection: " + collection_name)
+            logger.info("Successfully replace collection: %s", collection_name)
         else:
             logger.error("Failed to replace collection: " + collection_name)
 
-    logger.info(
-        "Finish! succeed: " + str(success_count) + ", failed: " + str(failed_count)
-    )
+    logger.info("Finish! succeed: %s, failed: %s", success_count, failed_count)
     send_notification(
         "已完成刷新！",
         "<font color='green'>已成功刷新："
@@ -267,9 +265,9 @@ def update_book_metadata(book_id, related_subject, book_name, number):
             thumbnail = bgm.get_subject_thumbnail(related_subject)
             replace_thumbnail_result = komga.update_book_thumbnail(book_id, thumbnail)
             if replace_thumbnail_result:
-                logger.debug("replace thumbnail for book: " + book_name)
+                logger.debug("replace thumbnail for book: %s", book_name)
             else:
-                logger.error("Failed to replace thumbnail for book: " + book_name)
+                logger.error("Failed to replace thumbnail for book: %s", book_name)
     else:
         record_book_status(
             conn, book_id, related_subject["id"], 0, book_name, "komga update failed"
@@ -324,7 +322,7 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
 
             # recheck or skip failed book
             elif book_record[2] == 0 and not RECHECK_FAILED_BOOKS:
-                logger.debug("skip falied books: " + book_name)
+                logger.debug("skip falied books: %s", book_name)
                 continue
 
         # If related_subjects is still empty[], skip
@@ -345,12 +343,10 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
                     subjects_numbers.append(number)
                 except ValueError:
                     logger.error(
-                        "Failed to extract number: "
-                        + book_id
-                        + ", "
-                        + subject["name"]
-                        + ", "
-                        + subject["name_cn"]
+                        "Failed to extract number: %s, %s, %s",
+                        book_id,
+                        subject["name"],
+                        subject["name_cn"]
                     )
 
         # get nunmber from book name

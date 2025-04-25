@@ -161,7 +161,10 @@ class KomgaApi:
             )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            logger.error(f"An error occurred: {e}")
+            if response.status_code == 413:
+                logger.error("缩略图过大，无法上传")
+            else:
+                logger.error(f"An error occurred: {e}")
         # return True if the status code indicates success, False otherwise
         return response.status_code == 200
 

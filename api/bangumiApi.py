@@ -157,7 +157,11 @@ class BangumiApiDataSource(DataSource):
         获取漫画封面
         """
         try:
-            thumbnail = self.r.get(subject_metadata["images"]["large"]).content
+            if subject_metadata["images"]:
+                image = subject_metadata["images"]["large"]
+            else:
+                image = self.get_subject_metadata(subject_metadata["id"])["images"]["large"]
+            thumbnail = self.r.get(image).content
         except Exception as e:
             logger.error(f"An error occurred: {e}")
             return []
