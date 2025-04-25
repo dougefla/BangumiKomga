@@ -195,7 +195,7 @@
 
 Komga 并没有区分漫画与小说。
 
-可以尝试修改代码，使其**只应用**于 Komga 的**小说库**：将`bangumiApi.py`中的`manga_metadata["platform"] != "小说"`修改为`manga_metadata["platform"] == "小说"`
+可以尝试修改代码，使其**只应用**于 Komga 的**小说库**：将`resortSearchResultsList.py`中的`SubjectPlatform.parse(manga_metadata["platform"]) != SubjectPlatform.Novel`修改为`SubjectPlatform.parse(manga_metadata["platform"]) == SubjectPlatform.Novel`
 
 ## 同步阅读进度
 
