@@ -28,8 +28,7 @@ def save_cache_time(last_updated):
 
 def convert_to_datetime(update_time_string):
     try:
-        result = datetime.fromisoformat(
-            update_time_string.replace("Z", "+00:00"))
+        result = datetime.fromisoformat(update_time_string.replace("Z", "+00:00"))
     except Exception as e:
         logger.warning(f"更新时间 {update_time_string} 获取失败: {str(e)}")
         return None
@@ -40,12 +39,12 @@ def get_latest_url_and_time():
     """获取最新Archive文件下载地址"""
     try:
         response = requests.get(
-            'https://raw.githubusercontent.com/bangumi/Archive/master/aux/latest.json',
-            timeout=20
+            "https://raw.githubusercontent.com/bangumi/Archive/master/aux/latest.json",
+            timeout=20,
         )
         response.raise_for_status()
         data = response.json()
-        return data.get('browser_download_url'), data.get('updated_at')
+        return data.get("browser_download_url"), data.get("updated_at")
     except requests.exceptions.RequestException as e:
         logger.warning(f"Bangumi Archive JSON 获取失败: {str(e)}")
     except json.JSONDecodeError as e:
@@ -62,13 +61,13 @@ def update_archive(url, target_dir=ARCHIVE_FILES_DIR):
         # 下载文件
         response = requests.get(url, stream=True, timeout=10)
         response.raise_for_status()
-        with open(temp_zip_path, 'wb') as f:
+        with open(temp_zip_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
         logger.info(f"Bangumi Archive 压缩包下载成功: {temp_zip_path}")
 
         # 解压文件
-        with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
+        with zipfile.ZipFile(temp_zip_path, "r") as zip_ref:
             zip_ref.extractall(target_dir)
         logger.info(f"Bangumi Archive 成功解压到: {target_dir}")
 
