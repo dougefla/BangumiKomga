@@ -90,9 +90,9 @@ def __setLanguage(komga_metadata, manga_filename):
     """
     languageTypes = [
         ("ja-JP", ["日版"]),
-        ("zh-hans", ["bili", "B漫", "汉化", "简中"]),
+        ("zh-Hans", ["bili", "B漫", "汉化", "简中"]),
         (
-            "zh-hant",
+            "zh-Hant",
             [
                 "繁中",
                 "尖端",
