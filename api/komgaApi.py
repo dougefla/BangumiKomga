@@ -152,10 +152,31 @@ class KomgaApi:
 
         https://github.com/gotson/komga/blob/master/komga/docs/openapi.json#L5373
         """
+        params = {
+            "size": 50000,
+            "unpaged": True,
+        }
+        payload = {
+            "condition": {
+                "allOf": [
+                    {
+                        "seriesId": {
+                            "operator": "is",
+                            "value": str(series_id),
+                        }
+                    },
+                    {
+                        "deleted": {
+                            "operator": "isFalse",
+                        }
+                    },
+                ]
+            }
+        }
         try:
             # make a GET request to the URL to retrieve all books in a given series
-            response = self.r.get(
-                f"{self.base_url}/series/{series_id}/books?size=50000&unpaged=true"
+            response = self.r.post(
+                f"{self.base_url}/books/list", params=params, json=payload
             )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
