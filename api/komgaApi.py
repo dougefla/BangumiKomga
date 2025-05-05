@@ -10,7 +10,7 @@ from requests.adapters import HTTPAdapter
 
 
 class KomgaApi:
-    def __init__(self, base_url, username, password):
+    def __init__(self, base_url, username, password, api_key=None):
         # store the base URL and authentication information for use in other methods
         self.base_url = base_url + "/api/v1"
         self.auth = (username, password)
@@ -19,19 +19,29 @@ class KomgaApi:
         self.r.mount("http://", HTTPAdapter(max_retries=3))
         self.r.mount("https://", HTTPAdapter(max_retries=3))
 
-        url = f"{self.base_url}/login/set-cookie"
-        response = self.r.get(
-            url,
-            auth=self.auth,
-            headers={
+        self.r.headers.update(
+            {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "User-Agent": "chu-shen/BangumiKomga (https://github.com/chu-shen/BangumiKomga)",
-            },
+            }
         )
-        if response.status_code != 204:
-            logger.error("Komga: login failed!")
-            exit(1)
+        if api_key:
+            self.r.headers["X-API-Key"]= api_key
+            test_url = f"{base_url}/api/v2/users/me"
+            response = self.r.get(test_url)
+            if response.status_code != 200:
+                logger.error("Komga: API key authentication failed!")
+                exit(1)
+        else:
+            url = f"{self.base_url}/login/set-cookie"
+            response = self.r.get(
+                url,
+                auth=self.auth,
+            )
+            if response.status_code != 204:
+                logger.error("Komga: Basic authentication failed!")
+                exit(1)
 
     def get_latest_series(self, library_id=None, page=0):
         """
