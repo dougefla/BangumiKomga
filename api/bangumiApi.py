@@ -290,7 +290,7 @@ class BangumiArchiveDataSource(DataSource):
         离线数据源获取关联条目列表
         """
         relation_list = self._get_relations_from_archive(subject_id)
-        if len(relation_list) < 1:
+        if not relation_list:
             return []
         result_list = []
         for item in relation_list:
