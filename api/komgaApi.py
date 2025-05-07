@@ -21,7 +21,6 @@ class KomgaApi:
 
         self.r.headers.update(
             {
-                "Content-Type": "application/json",
                 "Accept": "application/json",
                 "User-Agent": "chu-shen/BangumiKomga (https://github.com/chu-shen/BangumiKomga)",
             }
