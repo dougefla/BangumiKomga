@@ -70,8 +70,7 @@ def refresh_metadata(series_list=None):
                         "SELECT subject_id FROM refreshed_series WHERE series_id=?",
                         (series_id,),
                     ).fetchone()[0]
-                    refresh_book_metadata(
-                        subject_id, series_id, force_refresh_flag)
+                    refresh_book_metadata(subject_id, series_id, force_refresh_flag)
                     continue
 
                 # recheck or skip failed series
@@ -172,12 +171,9 @@ def refresh_metadata(series_list=None):
                     series_id, thumbnail
                 )
                 if replace_thumbnail_result:
-                    logger.debug(
-                        "替换系列: %s 的海报", series_name)
+                    logger.debug("替换系列: %s 的海报", series_name)
                 else:
-                    logger.error(
-                        "替换系列: %s 的海报失败", series_name
-                    )
+                    logger.error("替换系列: %s 的海报失败", series_name)
         else:
             failed_count, failed_comic = record_series_status(
                 conn,
@@ -210,12 +206,15 @@ def refresh_metadata(series_list=None):
             ).fetchall()
         ]
         # 用all_failed_series_ids 创建 FAILED_COLLECTION
-        if all_failed_series_ids and komga.replace_collection(collection_name, True, all_failed_series_ids):
-            logger.info("成功替换收藏: %s", collection_name)
-        else:
-            logger.error("替换收藏失败: " + collection_name)
+        if all_failed_series_ids:
+            if komga.replace_collection(collection_name, True, all_failed_series_ids):
+                logger.info("成功替换收藏: %s", collection_name)
+            else:
+                logger.error("替换收藏失败: %s", collection_name)
 
-    logger.info("执行完成! 刮削成功: %s 个, 刮削失败: %s 个", success_count, failed_count)
+    logger.info(
+        "执行完成! 刮削成功: %s 个, 刮削失败: %s 个", success_count, failed_count
+    )
     send_notification(
         "已完成刷新！",
         "<font color='green'>已成功刷新："
@@ -236,8 +235,7 @@ def getSeries():
     series_list = []
 
     if KOMGA_LIBRARY_LIST and KOMGA_COLLECTION_LIST:
-        logger.error(
-            "KOMGA_LIBRARY_LIST 和 KOMGA_COLLECTION_LIST 只能配置一种")
+        logger.error("KOMGA_LIBRARY_LIST 和 KOMGA_COLLECTION_LIST 只能配置一种")
     elif KOMGA_LIBRARY_LIST:
         series_list.extend(
             komga.get_series_with_libraryid(KOMGA_LIBRARY_LIST)["content"]
@@ -267,8 +265,7 @@ def _filter_new_modified_series(library_id=None):
     new_series = []
     stop_paging_flag = False
     while not stop_paging_flag:
-        temp_series = komga.get_latest_series(
-            library_id=library_id, page=page_index)
+        temp_series = komga.get_latest_series(library_id=library_id, page=page_index)
 
         if not temp_series:
             break
@@ -348,8 +345,7 @@ def update_book_metadata(book_id, related_subject, book_name, number):
     # Update the metadata for the series on komga
     is_success = komga.update_book_metadata(book_id, book_data)
     if is_success:
-        record_book_status(
-            conn, book_id, related_subject["id"], 1, book_name, "")
+        record_book_status(conn, book_id, related_subject["id"], 1, book_name, "")
 
         # 使用 Bangumi 图片替换原封面
         # 确保没有上传过海报，避免重复上传，排除 komga 生成的封面
@@ -358,13 +354,11 @@ def update_book_metadata(book_id, related_subject, book_name, number):
             and len(komga.get_book_thumbnails(book_id)) == 1
         ):
             thumbnail = bgm.get_subject_thumbnail(related_subject)
-            replace_thumbnail_result = komga.update_book_thumbnail(
-                book_id, thumbnail)
+            replace_thumbnail_result = komga.update_book_thumbnail(book_id, thumbnail)
             if replace_thumbnail_result:
                 logger.debug("替换书籍: %s 的海报 ", book_name)
             else:
-                logger.error(
-                    "替换书籍: %s 的海报失败", book_name)
+                logger.error("替换书籍: %s 的海报失败", book_name)
     else:
         record_book_status(
             conn, book_id, related_subject["id"], 0, book_name, "komga update failed"
@@ -404,10 +398,8 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
         # Get the subject id from the Correct Bgm Link (CBL) if it exists
         for link in book["metadata"]["links"]:
             if link["label"].lower() == "cbl":
-                cbl_subject = bgm.get_subject_metadata(
-                    link["url"].split("/")[-1])
-                number, _ = getNumber(
-                    cbl_subject["name"] + cbl_subject["name_cn"])
+                cbl_subject = bgm.get_subject_metadata(link["url"].split("/")[-1])
+                number, _ = getNumber(cbl_subject["name"] + cbl_subject["name_cn"])
                 update_book_metadata(book_id, cbl_subject, book_name, number)
                 break
 

@@ -18,22 +18,27 @@ class SlideWindowCounter:
         # 清理过期请求
         while self.requests and current_time - self.requests[0] > self.window_seconds:
             expired_time = self.requests.popleft()
-            logger.debug(f"时间: {time.time():.2f} | 移除过期请求")
+            logger.debug("时间: %s | 移除过期请求", current_time)
         if len(self.requests) < self.max_requests:
             self.requests.append(current_time)
             logger.debug(
-                f"时间: {time.time():.2f} | 允许请求 | 剩余: {self.remaining_requests()})"
+                "时间: %s | 允许请求 | 剩余: %s)",
+                current_time,
+                self.remaining_requests(),
             )
             return True
         else:
             logger.debug(
-                f"时间: {time.time():.2f} | 拒绝请求 | max reached: {self.max_requests})"
+                "时间: %s | 拒绝请求 | 达到最大请求数: %s)",
+                current_time,
+                self.max_requests,
             )
             return False
 
     def remaining_requests(self) -> int:
         """获取剩余可用请求数"""
         return self.max_requests - len(self.requests)
+
 
 # 参数设置参考：https://docs.anilist.co/guide/rate-limiting
 def SlideWindowRateLimiter(
