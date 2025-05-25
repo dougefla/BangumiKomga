@@ -161,6 +161,9 @@ class BangumiApiDataSource(DataSource):
     def get_subject_thumbnail(self, subject_metadata, image_size="large"):
         """
         获取漫画封面
+
+        image_size可选值:
+        large, common, medium,small, grid
         """
         try:
             if subject_metadata["images"]:
