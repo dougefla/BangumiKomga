@@ -8,15 +8,15 @@ import requests
 from requests.adapters import HTTPAdapter
 
 from tools.log import logger
-from bangumiArchive.archiveAutoupdater import check_archive
-from bangumiArchive.localArchiveHelper import (
+from bangumiArchive.archive_autoupdater import check_archive
+from bangumiArchive.local_archive_helper import (
     parse_infobox,
     search_line_with_index,
     search_list_with_index,
     search_all_data_batch_optimized,
 )
-from tools.resortSearchResultsList import resort_search_list
-from tools.slideWindowRateLimiter import SlideWindowRateLimiter
+from tools.resort_search_results_list import resort_search_list
+from tools.slide_window_rate_limiter import slide_window_rate_limiter
 from zhconv import convert
 from urllib.parse import quote_plus
 from abc import ABC, abstractmethod
@@ -76,7 +76,7 @@ class BangumiApiDataSource(DataSource):
         # https://next.bgm.tv/demo/access-token
         return
 
-    @SlideWindowRateLimiter()
+    @slide_window_rate_limiter()
     def search_subjects(self, query, threshold=80):
         """
         获取搜索结果，并移除非漫画系列。返回具有完整元数据的条目
@@ -111,7 +111,7 @@ class BangumiApiDataSource(DataSource):
             query=query, results=results, threshold=threshold, DataSource=self
         )
 
-    @SlideWindowRateLimiter()
+    @slide_window_rate_limiter()
     def get_subject_metadata(self, subject_id):
         """
         获取漫画元数据
@@ -128,7 +128,7 @@ class BangumiApiDataSource(DataSource):
             return []
         return response.json()
 
-    @SlideWindowRateLimiter()
+    @slide_window_rate_limiter()
     def get_related_subjects(self, subject_id):
         """
         获取漫画的关联条目
@@ -142,7 +142,7 @@ class BangumiApiDataSource(DataSource):
             return []
         return response.json()
 
-    @SlideWindowRateLimiter()
+    @slide_window_rate_limiter()
     def update_reading_progress(self, subject_id, progress):
         """
         更新漫画系列卷阅读进度
@@ -157,7 +157,7 @@ class BangumiApiDataSource(DataSource):
             logger.error(f"出现错误: {e}")
         return response.status_code == 204
 
-    @SlideWindowRateLimiter()
+    @slide_window_rate_limiter()
     def get_subject_thumbnail(self, subject_metadata, image_size="large"):
         """
         获取漫画封面

@@ -1,20 +1,20 @@
 import os
-from api.bangumiModel import SubjectRelation
-from tools.getTitle import ParseTitle
-import processMetadata
+from api.bangumi_model import SubjectRelation
+from tools.get_title import ParseTitle
+import process_metadata
 from time import strftime, localtime
 from tools.getNumber import getNumber, NumberType
 from tools.env import *
 from tools.log import logger
 from tools.notification import send_notification
-from tools.db import initSqlite3, record_series_status, record_book_status
-from tools.cacheTime import TimeCacheManager
+from tools.db import init_sqlite3, record_series_status, record_book_status
+from tools.cache_time import TimeCacheManager
 
 
 env = InitEnv()
 bgm = env.bgm
 komga = env.komga
-cursor, conn = initSqlite3()
+cursor, conn = init_sqlite3()
 
 
 def refresh_metadata(series_list=None):
@@ -22,7 +22,7 @@ def refresh_metadata(series_list=None):
     刷新书籍系列元数据
     """
     if series_list is None or series_list == []:
-        series_list = getSeries()
+        series_list = get_series()
 
     parse_title = ParseTitle()
 
@@ -117,7 +117,7 @@ def refresh_metadata(series_list=None):
             logger.warning("无法获取元数据: %s", series_name)
             continue
 
-        komga_metadata = processMetadata.setKomangaSeriesMetadata(
+        komga_metadata = process_metadata.set_komga_series_metadata(
             metadata, series_name, bgm
         )
 
@@ -248,7 +248,7 @@ def refresh_metadata(series_list=None):
     )
 
 
-def getSeries(series_ids=[]):
+def get_series(series_ids=[]):
     series_list = []
     if len(series_ids) > 0:
         for series_id in series_ids:
@@ -343,7 +343,7 @@ def refresh_partial_metadata():
 
 def update_book_metadata(book_id, related_subject, book_name, number):
     # Get the metadata for the book from bangumi
-    book_metadata = processMetadata.setKomangaBookMetadata(
+    book_metadata = process_metadata.set_komga_book_metadata(
         related_subject["id"], number, book_name, bgm
     )
     if book_metadata.isvalid == False:

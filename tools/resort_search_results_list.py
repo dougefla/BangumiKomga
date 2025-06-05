@@ -1,5 +1,5 @@
 from thefuzz import fuzz
-from api.bangumiModel import SubjectPlatform
+from api.bangumi_model import SubjectPlatform
 from config.config import IS_NOVEL_ONLY
 
 
