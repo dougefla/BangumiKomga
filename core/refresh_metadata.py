@@ -1,9 +1,9 @@
 import os
 from api.bangumi_model import SubjectRelation
 from tools.get_title import ParseTitle
-import process_metadata
+import core.process_metadata as process_metadata
 from time import strftime, localtime
-from tools.getNumber import getNumber, NumberType
+from tools.get_number import get_number, NumberType
 from tools.env import *
 from tools.log import logger
 from tools.notification import send_notification
@@ -424,7 +424,7 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
             if link["label"].lower() == "cbl":
                 cbl_subject = bgm.get_subject_metadata(
                     link["url"].split("/")[-1])
-                number, _ = getNumber(
+                number, _ = get_number(
                     cbl_subject["name"] + cbl_subject["name_cn"])
                 update_book_metadata(book_id, cbl_subject, book_name, number)
                 break
@@ -455,7 +455,7 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
             # Get the number for each related subject by finding the last number in the name or name_cn field
             subjects_numbers = []
             for subject in related_subjects:
-                number, _ = getNumber(subject["name"] + subject["name_cn"])
+                number, _ = get_number(subject["name"] + subject["name_cn"])
                 try:
                     subjects_numbers.append(number)
                 except ValueError:
@@ -467,7 +467,7 @@ def refresh_book_metadata(subject_id, series_id, force_refresh_flag):
                     )
 
         # get nunmber from book name
-        book_number, number_type = getNumber(book_name)
+        book_number, number_type = get_number(book_name)
         ep_flag = True
         if number_type not in (NumberType.CHAPTER, NumberType.NONE):
             # Update the metadata for the book if its number matches a related subject number

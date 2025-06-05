@@ -8,8 +8,8 @@ import requests
 from requests.adapters import HTTPAdapter
 
 from tools.log import logger
-from bangumiArchive.archive_autoupdater import check_archive
-from bangumiArchive.local_archive_helper import (
+from bangumi_archive.archive_autoupdater import check_archive
+from bangumi_archive.local_archive_helper import (
     parse_infobox,
     search_line_with_index,
     search_list_with_index,
@@ -108,7 +108,7 @@ class BangumiApiDataSource(DataSource):
                 return []
 
         return resort_search_list(
-            query=query, results=results, threshold=threshold, DataSource=self
+            query=query, results=results, threshold=threshold, data_source=self
         )
 
     @slide_window_rate_limiter()
@@ -179,7 +179,7 @@ class BangumiApiDataSource(DataSource):
         return files
 
 
-class BangumiArchiveDataSource(DataSource):
+class bangumi_archiveDataSource(DataSource):
     """
     离线数据源类
     """
@@ -242,7 +242,7 @@ class BangumiArchiveDataSource(DataSource):
                 }
                 search_results.append(result)
         return resort_search_list(
-            query=query, results=search_results, threshold=threshold, DataSource=self
+            query=query, results=search_results, threshold=threshold, data_source=self
         )
 
     def get_subject_metadata(self, subject_id):
@@ -350,7 +350,7 @@ class BangumiDataSourceFactory:
         online = BangumiApiDataSource(config.get("access_token"))
 
         if config.get("use_local_archive", False):
-            offline = BangumiArchiveDataSource(
+            offline = bangumi_archiveDataSource(
                 config.get("local_archive_folder"))
             return FallbackDataSource(offline, online)
 

@@ -1,7 +1,7 @@
 import threading
 from tools.log import logger
 from config.config import KOMGA_LIBRARY_LIST
-from refresh_metadata import refresh_metadata, get_series
+from core.refresh_metadata import refresh_metadata, get_series
 from api.komga_sse_api import KomgaSseApi
 import threading
 
