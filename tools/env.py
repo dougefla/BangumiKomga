@@ -23,7 +23,7 @@ class InitEnv:
             KOMGA_BASE_URL, KOMGA_EMAIL, KOMGA_EMAIL_PASSWORD
         )
 
-    def prepare_procedure():
+    def prepare_procedure(self):
         """检查目录权限并提前创建必要目录"""
         try:
             # 准备日志目录
