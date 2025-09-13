@@ -4,7 +4,7 @@ from config.config import *
 import os
 import sqlite3
 from tools.log import logger
-from configuration_generator import start_config_generate
+from config.configuration_generator import start_config_generate
 
 
 class InitEnv:
