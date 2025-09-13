@@ -20,10 +20,16 @@ jobs:
         with:
           python-version: '3.13'
           
-      - name: Generate config schema
+      - name: Prepare ENV
         run: |
           pip3 install -r install/requirements.txt
           pip3 install colorama==0.4.6
+          mkdir -p logs
+          mkdir -p archivedata
+          echo "INFO: Test log content" > logs/refreshMetadata.log      
+      
+      - name: Generate config schema
+        run: |
           python config/generate_config_schema.py
           
       - name: Deploy to GitHub Pages
