@@ -7,6 +7,9 @@ import json
 import requests
 from colorama import Fore, Style, init
 from requests.exceptions import RequestException
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 from api.komga_api import KomgaApi
 
 # 初始化 colorama（Windows 必需）
@@ -186,7 +189,7 @@ def parse_template(template_file=TEMPLATE_FILE):
                 required = current_metadata.get("required", "False").lower() == "true"
                 validator = current_metadata.get("validator")
                 info = current_metadata.get("info", "")
-                dependency = current_metadata.get("dependency")
+                allowed_values = current_metadata.get("allowed_values")
                 _, value_part = line.split("=", 1)
                 try:
                     default = ast.literal_eval(value_part.strip())
@@ -201,9 +204,9 @@ def parse_template(template_file=TEMPLATE_FILE):
                     "validator": validator,
                     "info": info,
                 }
-                if dependency:
-                    schema_item["dependency"] = [
-                        d.strip() for d in dependency.split(",")
+                if allowed_values:
+                    schema_item["allowed_values"] = [
+                        d.strip() for d in allowed_values.split(",")
                     ]
                 config_schema.append(schema_item)
                 current_metadata = {}

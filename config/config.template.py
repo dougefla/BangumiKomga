@@ -70,7 +70,7 @@ ARCHIVE_UPDATE_INTERVAL = 168
 # @@required: False
 # @@validator:
 # @@info: 可选值：'once', 'poll', 'sse'
-# @@allowed_values: ['once', 'poll', 'sse']
+# @@allowed_values: once, poll, sse
 BANGUMI_KOMGA_SERVICE_TYPE = "once"
 
 # @@name: BANGUMI_KOMGA_SERVICE_POLL_INTERVAL
@@ -111,7 +111,7 @@ CREATE_FAILED_COLLECTION = False
 # @@default: []
 # @@info: 消息通知
 # @@info: 可选值：'GOTIFY', 'WEBHOOK', 'HEALTHCHECKS'
-# @@allowed_values: ['GOTIFY', 'WEBHOOK', 'HEALTHCHECKS']
+# @@allowed_values: GOTIFY, WEBHOOK, HEALTHCHECKS
 NOTIF_TYPE_ENABLE = []
 
 NOTIF_GOTIFY_ENDPOINT = "http://IP:PORT"
