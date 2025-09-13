@@ -23,6 +23,7 @@ jobs:
       - name: Generate config schema
         run: |
           pip3 install -r install/requirements.txt
+          pip3 install colorama==0.4.6
           python config/generate_config_schema.py
           
       - name: Deploy to GitHub Pages
