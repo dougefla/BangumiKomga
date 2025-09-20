@@ -292,14 +292,14 @@ def get_series_metadata(series_ids=[]) -> list:
         if KOMGA_LIBRARY_LIST:
             for libray_item in KOMGA_LIBRARY_LIST:
                 series_list = komga.get_series_with_libraryid(
-                    libray_item["LIBRARY"])["content"]
+                    [libray_item["LIBRARY"]])["content"]
                 for series in series_list:
                     series["is_novel"] = libray_item["IS_NOVEL_ONLY"]
                 series_metadata_list.extend(series_list)
         if KOMGA_COLLECTION_LIST:
             for collection_item in KOMGA_COLLECTION_LIST:
                 series_list = komga.get_series_with_collection(
-                    collection_item["COLLECTION"])["content"]
+                    [collection_item["COLLECTION"]])["content"]
                 for series in series_list:
                     series["is_novel"] = collection_item["IS_NOVEL_ONLY"]
                 series_metadata_list.extend(series_list)
