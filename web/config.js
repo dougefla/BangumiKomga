@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                         ${item.required ? '<span class="required">*</span>' : ''}
                         ${item.version ? `<span class="version">(v${item.version})</span>` : ''}
                     </label>
+                    ${item.name === 'KOMGA_LIBRARY_LIST' || item.name === 'KOMGA_COLLECTION_LIST' ?
+                    `<div class="help-text">由于安全限制，请手动输入</div>` : ''}
                     ${renderInput(item)}
                     ${item.info ? `<div class="help-text">${item.info}</div>` : ''}
                 </div>
@@ -127,7 +129,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (item && item.type === 'list') {
             // 处理多选列表
             const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
-            configValues[name] = Array.from(checkboxes).map(cb => cb.value);
+            if (input.type == 'checkbox') {
+                configValues[name] = Array.from(checkboxes).map(cb => cb.value);
+            } else {
+                configValues[name] = JSON.parse(input.value);
+            }
         } else if (input.type === 'checkbox') {
             configValues[name] = input.checked;
         } else {
