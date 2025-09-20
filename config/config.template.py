@@ -38,13 +38,20 @@ KOMGA_EMAIL_PASSWORD = "password"
 
 
 # @@name: KOMGA_LIBRARY_LIST
-# @@prompt: 开始 KOMGA 库交互式设置
+# @@prompt: 配置 KOMGA 库
 # @@type: string
 # @@required: False
-# @@validator: validate_komga_libraries
+# @@validator: 
 # @@info: 将使用 KOMGA_BASE_URL, KOMGA_EMAIL 和 KOMGA_EMAIL_PASSWORD 读取库列表
-# @@version: 0.14.0
+# @@version: 0.18.0
 KOMGA_LIBRARY_LIST = []
+# @@name: KOMGA_COLLECTION_LIST
+# @@prompt: 配置 KOMGA 库收藏
+# @@type: string
+# @@required: False
+# @@validator: 
+# @@info: 将使用 KOMGA_BASE_URL, KOMGA_EMAIL 和 KOMGA_EMAIL_PASSWORD 读取收藏列表
+# @@version: 0.18.0
 KOMGA_COLLECTION_LIST = []
 
 
