@@ -1,14 +1,11 @@
-# type 可选值 : password, string, url, boolean, integer
-
-
 # @@name: BANGUMI_ACCESS_TOKEN
 # @@prompt: BGM访问令牌
 # @@type: password
-# @@required: True
+# @@required: false
 # @@validator: validate_bangumi_token
 # @@info: 获取地址: https://next.bgm.tv/demo/access-token
 # @@version: 0.1
-BANGUMI_ACCESS_TOKEN = 'gruUsn***************************SUSSn'
+BANGUMI_ACCESS_TOKEN = ''
 
 
 # @@name: KOMGA_BASE_URL
@@ -16,9 +13,9 @@ BANGUMI_ACCESS_TOKEN = 'gruUsn***************************SUSSn'
 # @@type: url
 # @@required: True
 # @@validator: validate_url
-# @@info:
+# @@info: http://IP:PORT
 # @@version: 0.1
-KOMGA_BASE_URL = "http://IP:PORT"
+KOMGA_BASE_URL = ""
 
 # @@name: KOMGA_EMAIL
 # @@prompt: KOMGA账户邮箱地址
@@ -26,7 +23,7 @@ KOMGA_BASE_URL = "http://IP:PORT"
 # @@required: True
 # @@validator: validate_email
 # @@version: 0.1
-KOMGA_EMAIL = "email"
+KOMGA_EMAIL = ""
 
 # @@name: KOMGA_EMAIL_PASSWORD
 # @@prompt: KOMGA账户密码
@@ -34,22 +31,22 @@ KOMGA_EMAIL = "email"
 # @@required: True
 # @@validator: validate_komga_access
 # @@version: 0.1
-KOMGA_EMAIL_PASSWORD = "password"
+KOMGA_EMAIL_PASSWORD = ""
 
 
 # @@name: KOMGA_LIBRARY_LIST
 # @@prompt: 配置 KOMGA 库
-# @@type: string
+# @@type: list
 # @@required: False
-# @@validator: 
+# @@validator:
 # @@info: 将使用 KOMGA_BASE_URL, KOMGA_EMAIL 和 KOMGA_EMAIL_PASSWORD 读取库列表
 # @@version: 0.18.0
 KOMGA_LIBRARY_LIST = []
 # @@name: KOMGA_COLLECTION_LIST
-# @@prompt: 配置 KOMGA 库收藏
-# @@type: string
+# @@prompt: 配置 KOMGA 收藏
+# @@type: list
 # @@required: False
-# @@validator: 
+# @@validator:
 # @@info: 将使用 KOMGA_BASE_URL, KOMGA_EMAIL 和 KOMGA_EMAIL_PASSWORD 读取收藏列表
 # @@version: 0.18.0
 KOMGA_COLLECTION_LIST = []
@@ -175,7 +172,7 @@ CREATE_FAILED_COLLECTION = False
 
 # @@name: NOTIF_TYPE_ENABLE
 # @@prompt: 设置消息通知类型
-# @@type: string
+# @@type: list
 # @@required: False
 # @@default: []
 # @@info: 可选值：'GOTIFY', 'WEBHOOK', 'HEALTHCHECKS'
