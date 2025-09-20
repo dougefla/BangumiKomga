@@ -39,7 +39,7 @@ KOMGA_EMAIL_PASSWORD = ""
 # @@type: list
 # @@required: False
 # @@validator:
-# @@info: 将使用 KOMGA 配置读取库列表。配置示例：[{'LIBRARY': '0BYYYYABE9EAV', 'IS_NOVEL_ONLY': False}]
+# @@info: 将使用 KOMGA 配置读取库列表。配置示例：[{"LIBRARY": "0BYYYYABE9EAV", "IS_NOVEL_ONLY": False}]
 # @@version: 0.18.0
 KOMGA_LIBRARY_LIST = []
 # @@name: KOMGA_COLLECTION_LIST
@@ -47,7 +47,7 @@ KOMGA_LIBRARY_LIST = []
 # @@type: list
 # @@required: False
 # @@validator:
-# @@info: 将使用 KOMGA 配置读取收藏列表。配置示例：[{'COLLECTION': '0BCWTYYCYYY4C', 'IS_NOVEL_ONLY': True}]
+# @@info: 将使用 KOMGA 配置读取收藏列表。配置示例：[{"COLLECTION": "0BCWTYYCYYY4C", "IS_NOVEL_ONLY": True}]
 # @@version: 0.18.0
 KOMGA_COLLECTION_LIST = []
 
