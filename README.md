@@ -56,6 +56,7 @@
 - [x] 使用[bangumi/Archive](https://github.com/bangumi/Archive)离线数据代替联网查询
 - [x] 可常驻后台轮询更新元数据
 - [x] 使用滑动窗口限制联网查询频率
+- [x] 支持命令行交互式配置生成器及网页版配置生成器
 
 处理逻辑见[DESIGN](docs/DESIGN.md)
 
@@ -65,7 +66,6 @@
 - [ ] 重构元数据更新范围及覆盖逻辑
 - [ ] 增强文件名解析
 - [ ] ~~自动化测试~~ 完善测试用例
-- [ ] 使用命令行交互式配置生成器或网页配置生成器生成配置
 - [ ] 支持在匹配书籍后导出 [comicinfo.xml](https://github.com/anansi-project/comicinfo), [info.json(eze)](https://github.com/Difegue/LANraragi) 和 [series.json](https://github.com/mylar3/mylar3/wiki/series.json-schema-%28version-1.0.2%29)
 
 ## 先决条件
