@@ -100,7 +100,7 @@
         - /path/BangumiKomga/archivedata:/app/archivedata # 离线元数据（可选），详见`ARCHIVE_FILES_DIR`
     ```
 
-2. 填写[必需配置](#komga-配置必填)
+2. 根据模板`config/config.template.py` 创建配置文件：`config/config.py`, 然后填写[必需配置](#komga-配置必填)。(_推荐优先使用[交互式配置生成](#交互式配置生成)_)
 
 3. 用 `python main.py` 执行脚本, 或者用 `docker start bangumikomga` 启动Docker容器(默认执行后容器将自动关闭，详细说明见[服务运行方式](#服务运行方式))
 
@@ -111,9 +111,7 @@
 
 ## Komga 配置（必填）
 
-推荐优先使用[交互式配置生成](#交互式配置生成)
-
-将 `config/config.template.py` 重命名为 `config/config.py`, 并修改 `KOMGA_BASE_URL`, `KOMGA_EMAIL` 和 `KOMGA_EMAIL_PASSWORD` 以便程序访问你的 Komga 实例(此用户需要有 Komga 元数据修改权限)。
+修改 `KOMGA_BASE_URL`, `KOMGA_EMAIL` 和 `KOMGA_EMAIL_PASSWORD` 以便程序访问你的 Komga 实例(此用户需要有 Komga 元数据修改权限)。
 
 `KOMGA_LIBRARY_LIST` 处理指定库中的书籍系列。Komga 界面点击库（对应链接）即可获得，形如：`'0B79XX3NP97K9'`，对应地址：`http://IP:PORT/libraries/0B79XX3NP97K9/series`。配置示例：`[{"LIBRARY": "0B79XX3NP97K9", "IS_NOVEL_ONLY": False}]`
 
