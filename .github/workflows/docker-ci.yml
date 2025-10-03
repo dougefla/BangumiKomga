@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: chu1shen/bangumikomga
+          images: douge/bangumikomga
       -
         name: Login to DockerHub
         if: github.event_name != 'pull_request'
