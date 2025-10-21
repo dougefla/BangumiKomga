@@ -104,6 +104,7 @@ def _set_language(komga_metadata, manga_filename):
                 "天下",
                 "青文",
                 "长鸿",
+                "長鴻",
                 "角川",
                 "文传",
                 "文傳",
