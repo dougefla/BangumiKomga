@@ -214,6 +214,12 @@ class BangumiArchiveDataSource(DataSource):
         for item in results:
             item["images"] = ""  # 忽略 images 字段
             item["infobox"] = parse_infobox(item["infobox"])
+            item["rating"] = {
+                "rank": item.get("rank", 0),
+                "total": item.get("total", 0),
+                "count": item.get("score_details", {}),
+                "score": item.get("score", 0.0),
+            }
         return resort_search_list(
             query=query, results=results, threshold=threshold, is_novel=is_novel
         )
@@ -238,7 +244,7 @@ class BangumiArchiveDataSource(DataSource):
                 "count": data.get("score_details", {}),
                 "score": data.get("score", 0.0),
             }
-            data["total_episodes"] = (data.get("eps", 0),)
+            data["total_episodes"] = data.get("eps", 0)
             data["collection"] = {
                 "on_hold": data["favorite"].get("on_hold", 0),
                 "dropped": data["favorite"].get("dropped", 0),
