@@ -87,7 +87,6 @@ class BangumiApiDataSource(DataSource):
         url = f"{self.BASE_URL}/v0/search/subjects?limit=10"
         payload = {"keyword": query, "filter": {"type": [BangumiBaseType.BOOK.value]}}
 
-        # TODO 处理特殊字符：'citrus+ ~柑橘味香气plus~'
         try:
             response = self.r.post(url, headers=self._get_headers(), json=payload)
             response.raise_for_status()

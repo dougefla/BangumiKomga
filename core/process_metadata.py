@@ -54,6 +54,7 @@ def _set_status(komga_metadata, bangumi_metadata):
     runningLang = ["放送", "放送（連載）中"]
     abandonedLang = ["打ち切り"]
     endedLang = ["完結", "结束", "连载结束"]
+    hiatusLang = ["有生之年"]
 
     casestatus = "ONGOING"
 
@@ -65,6 +66,9 @@ def _set_status(komga_metadata, bangumi_metadata):
             break
         elif info["key"] in endedLang:
             casestatus = "ENDED"
+            break
+        elif info["key"] in hiatusLang:
+            casestatus = "HIATUS"
             break
 
     komga_metadata.status = casestatus
