@@ -6,6 +6,7 @@
 import requests
 from requests.adapters import HTTPAdapter
 
+from api.bangumi_model import BangumiBaseType
 from tools.log import logger
 from bangumi_archive.local_archive_searcher import (
     parse_infobox,
@@ -84,7 +85,7 @@ class BangumiApiDataSource(DataSource):
         # 反面例子：君は淫らな僕の女王 -> 君は淫らな仆の女王，47331
         query = convert(query, "zh-cn")
         url = f"{self.BASE_URL}/v0/search/subjects?limit=10"
-        payload = {"keyword": query, "filter": {"type": [1]}}
+        payload = {"keyword": query, "filter": {"type": [BangumiBaseType.BOOK.value]}}
 
         # TODO 处理特殊字符：'citrus+ ~柑橘味香气plus~'
         try:
@@ -272,6 +273,7 @@ class BangumiArchiveDataSource(DataSource):
                         "name": metadata.get("name"),
                         "name_cn": metadata.get("name_cn"),
                         "relation": item.get("relation_type"),
+                        "type": metadata.get("type"),
                         "id": metadata.get("id"),
                         # 忽略 images 字段
                         "images": "",

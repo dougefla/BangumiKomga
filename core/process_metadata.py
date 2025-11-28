@@ -4,7 +4,7 @@
 # ------------------------------------------------------------------
 
 
-from api.bangumi_model import SubjectRelation
+from api.bangumi_model import BangumiBaseType, SubjectPlatform, SubjectRelation
 from api.komga_api import *
 from pypinyin import slug, Style
 
@@ -32,7 +32,7 @@ def _set_genres(komga_metadata, bangumi_metadata):
     if bangumi_metadata["platform"] is None:
         genrelist.append("其他")
     else:
-        genrelist.append(bangumi_metadata["platform"])
+        genrelist.append(SubjectPlatform.parse(bangumi_metadata["platform"]).cn)
     for info in bangumi_metadata["infobox"]:
         if info["key"] == "连载杂志":
             if type(info["value"]) == list:
@@ -73,6 +73,7 @@ def _set_status(komga_metadata, bangumi_metadata):
 def _set_total_book_count(komga_metadata, subject_relations):
     """
     漫画总册数
+    bgm 元数据中的 volumes 字段不一定准确/更新及时，改为根据关联条目统计
     """
     totalBookCount = 0
     for relation in subject_relations:
@@ -115,6 +116,7 @@ def _set_language(komga_metadata, manga_filename):
     for langCode, keywords in languageTypes:
         if any(keyword in manga_filename for keyword in keywords):
             komga_metadata.language = langCode
+
 
 def _set_alternate_titles(komga_metadata, bangumi_metadata):
     """
@@ -227,19 +229,24 @@ def _set_links(komga_metadata, bangumi_metadata, subject_relations):
             "url": "https://bgm.tv/subject/" + str(bangumi_metadata["id"]),
         }
     ]
+    # 添加改编动画、书籍链接
     for relation in subject_relations:
-        if relation["relation"] == "动画":
-            link = {
-                "label": "动画：" + relation["name"],
-                "url": "https://bgm.tv/subject/" + str(relation["id"]),
-            }
-            links.append(link)
-        if relation["relation"] == "书籍":
-            link = {
-                "label": "书籍：" + relation["name"],
-                "url": "https://bgm.tv/subject/" + str(relation["id"]),
-            }
-            links.append(link)
+        if (
+            SubjectRelation.parse(relation["relation"]).value
+            == SubjectRelation.ADAPTATION.value
+        ):
+            if BangumiBaseType.parse(relation["type"]) == BangumiBaseType.ANIME:
+                link = {
+                    "label": "动画：" + relation["name"],
+                    "url": "https://bgm.tv/subject/" + str(relation["id"]),
+                }
+                links.append(link)
+            elif BangumiBaseType.parse(relation["type"]) == BangumiBaseType.BOOK:
+                link = {
+                    "label": "书籍：" + relation["name"],
+                    "url": "https://bgm.tv/subject/" + str(relation["id"]),
+                }
+                links.append(link)
     komga_metadata.links = links
 
 
