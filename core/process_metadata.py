@@ -233,24 +233,25 @@ def _set_links(komga_metadata, bangumi_metadata, subject_relations):
             "url": "https://bgm.tv/subject/" + str(bangumi_metadata["id"]),
         }
     ]
-    # 添加改编动画、书籍链接
-    for relation in subject_relations:
-        if (
-            SubjectRelation.parse(relation["relation"]).value
-            == SubjectRelation.ADAPTATION.value
-        ):
-            if BangumiBaseType.parse(relation["type"]) == BangumiBaseType.ANIME:
-                link = {
-                    "label": "动画：" + relation["name"],
-                    "url": "https://bgm.tv/subject/" + str(relation["id"]),
-                }
-                links.append(link)
-            elif BangumiBaseType.parse(relation["type"]) == BangumiBaseType.BOOK:
-                link = {
-                    "label": "书籍：" + relation["name"],
-                    "url": "https://bgm.tv/subject/" + str(relation["id"]),
-                }
-                links.append(link)
+    if subject_relations:
+        # 添加改编动画、书籍链接
+        for relation in subject_relations:
+            if (
+                SubjectRelation.parse(relation["relation"]).value
+                == SubjectRelation.ADAPTATION.value
+            ):
+                if BangumiBaseType.parse(relation["type"]) == BangumiBaseType.ANIME:
+                    link = {
+                        "label": "动画：" + relation["name"],
+                        "url": "https://bgm.tv/subject/" + str(relation["id"]),
+                    }
+                    links.append(link)
+                elif BangumiBaseType.parse(relation["type"]) == BangumiBaseType.BOOK:
+                    link = {
+                        "label": "书籍：" + relation["name"],
+                        "url": "https://bgm.tv/subject/" + str(relation["id"]),
+                    }
+                    links.append(link)
     komga_metadata.links = links
 
 
