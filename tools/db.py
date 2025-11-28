@@ -75,10 +75,10 @@ def record_series_status(
     upsert_series_record(conn, series_id, subject_id, status, series_name, message)
     count += 1
     if status == 0:
-        logger.warning("更新系列元数据失败: " + series_name + ", " + message)
+        logger.warning("更新系列元数据失败: %s, %s", series_name, message)
         comic = comic + "- " + series_name + "\n"
     elif status == 1:
-        logger.info("更新系列元数据成功: " + series_name + ", " + message)
+        logger.info("更新系列元数据成功: %s, %s", series_name, message)
         comic = comic + "- " + message + "\n"
 
     return count, comic
@@ -87,11 +87,9 @@ def record_series_status(
 def record_book_status(conn, book_id, subject_id, status, book_name, message):
     upsert_book_record(conn, book_id, subject_id, status, book_name)
     if status == 0:
-        logger.warning(
-            "更新 " + str(subject_id) + " 的书籍元数据失败: " + book_name + ", " + message
-        )
+        logger.warning("更新书籍元数据失败: %s, %s, %s", book_id, book_name, message)
     elif status == 1:
-        logger.info("更新 " + str(subject_id) + " 的书籍元数据成功: " + book_name)
+        logger.info("更新书籍元数据成功: %s", book_name)
 
 
 def get_series_update_status(conn, series_id):
