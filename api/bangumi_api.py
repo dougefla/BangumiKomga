@@ -212,6 +212,7 @@ class BangumiArchiveDataSource(DataSource):
         results = self._get_search_results_from_archive(query)
         for item in results:
             item["images"] = ""  # 忽略 images 字段
+            item["infobox"] = parse_infobox(item["infobox"])
         return resort_search_list(
             query=query, results=results, threshold=threshold, is_novel=is_novel
         )
@@ -224,45 +225,30 @@ class BangumiArchiveDataSource(DataSource):
         if not data:
             return {}
         try:
-            result = {
-                "date": data.get("date"),
-                "platform": data["platform"],
-                # 忽略 images 字段
-                # "images": get_images(subject_ID),
-                "images": "",
-                "summary": data.get("summary"),
-                "name": data.get("name"),
-                "name_cn": data.get("name_cn"),
-                "tags": [
-                    {"name": t["name"], "count": t["count"], "total_cont": 0}
-                    for t in data.get("tags", [])
-                ],
-                "infobox": parse_infobox(data["infobox"]),
-                "rating": {
-                    "rank": data.get("rank", 0),
-                    "total": data.get("total", 0),
-                    "count": data.get("score_details", {}),
-                    "score": data.get("score", 0.0),
-                },
-                "total_episodes": data.get("eps", 0),
-                "collection": {
-                    "on_hold": data["favorite"].get("on_hold", 0),
-                    "dropped": data["favorite"].get("dropped", 0),
-                    "wish": data["favorite"].get("wish", 0),
-                    # 假设done对应collect
-                    "collect": data["favorite"].get("done", 0),
-                    "doing": data["favorite"].get("doing", 0),
-                },
-                "id": data.get("id"),
-                "eps": data.get("eps", 0),
-                "meta_tags": [tag["name"] for tag in data.get("tags", [])],
-                "volumes": data.get("volumes", 0),
-                "series": data.get("series", False),
-                "locked": data.get("locked", False),
-                "nsfw": data.get("nsfw", False),
-                "type": data.get("type", 0),
+            data["images"] = ""
+            data["tags"] = [
+                {"name": t["name"], "count": t["count"], "total_cont": 0}
+                for t in data.get("tags", [])
+            ]
+            data["infobox"] = parse_infobox(data["infobox"])
+            data["rating"] = {
+                "rank": data.get("rank", 0),
+                "total": data.get("total", 0),
+                "count": data.get("score_details", {}),
+                "score": data.get("score", 0.0),
             }
-            return result
+            data["total_episodes"] = (data.get("eps", 0),)
+            data["collection"] = {
+                "on_hold": data["favorite"].get("on_hold", 0),
+                "dropped": data["favorite"].get("dropped", 0),
+                "wish": data["favorite"].get("wish", 0),
+                # 假设done对应collect
+                "collect": data["favorite"].get("done", 0),
+                "doing": data["favorite"].get("doing", 0),
+            }
+            data["meta_tags"] = [tag["name"] for tag in data.get("tags", [])]
+
+            return data
         except Exception as e:
             logger.error(f"构建Archive元数据出错: {e}")
             return {}
