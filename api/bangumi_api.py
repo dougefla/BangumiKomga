@@ -84,10 +84,12 @@ class BangumiApiDataSource(DataSource):
         # 正面例子：魔女與使魔 -> 魔女与使魔，325236
         # 反面例子：君は淫らな僕の女王 -> 君は淫らな仆の女王，47331
         query = convert(query, "zh-cn")
-        url = f"{self.BASE_URL}/search/subject/{quote_plus(query)}?responseGroup=small&type=1&max_results=25"
-        # TODO 处理'citrus+ ~柑橘味香气plus~'
+        url = f"{self.BASE_URL}/v0/search/subjects?limit=10"
+        payload = {"keyword": query,"filter":{"type":[1]}}
+
+        # TODO 处理特殊字符：'citrus+ ~柑橘味香气plus~'
         try:
-            response = self.r.get(url, headers=self._get_headers())
+            response = self.r.post(url, headers=self._get_headers(), json=payload)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             logger.error(f"出现错误: {e}")
@@ -101,11 +103,7 @@ class BangumiApiDataSource(DataSource):
             logger.warning(f"{query}: 404 Not Found")
             return []
         else:
-            # e.g. 川瀬绫 -> {"results":1,"list":null}
-            if "list" in response_json and isinstance(response_json["list"], (list,)):
-                results = response_json["list"]
-            else:
-                return []
+            results = response_json["data"]
 
         return resort_search_list(
             query=query, results=results, threshold=threshold, data_source=self, is_novel=is_novel
@@ -218,25 +216,17 @@ class BangumiArchiveDataSource(DataSource):
         search_results = []
         results = self._get_search_results_from_archive(query)
         for item in results:
-            if (
-                query.lower() in str(item["name"]).lower()
-                or query.lower() in str(item.get("name_cn", "")).lower()
-                or query in str(item.get("summary", ""))
-                or any(query in tag["name"] for tag in item.get("tags", []))
-            ):
-                result = {
-                    "id": item["id"],
-                    "url": r"http://bgm.tv/subject/" + str(item["id"]),
-                    "type": item.get("type", 0),
-                    "name": item.get("name", ""),
-                    "name_cn": item.get("name_cn", ""),
-                    "summary": item.get("summary", ""),
-                    "air_date": item.get("air_date", ""),
-                    "air_weekday": item.get("air_weekday", 0),
-                    # 忽略 images 字段
-                    "images": "",
-                }
-                search_results.append(result)
+            result = {
+                "id": item["id"],
+                "url": r"http://bgm.tv/subject/" + str(item["id"]),
+                "type": item.get("type", 0),
+                "name": item.get("name", ""),
+                "name_cn": item.get("name_cn", ""),
+                "summary": item.get("summary", ""),
+                # 忽略 images 字段
+                "images": "",
+            }
+            search_results.append(result)
         return resort_search_list(
             query=query, results=search_results, threshold=threshold, data_source=self, is_novel=is_novel
         )
