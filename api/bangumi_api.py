@@ -16,7 +16,6 @@ from bangumi_archive.local_archive_searcher import (
 from tools.resort_search_results_list import resort_search_list
 from tools.slide_window_rate_limiter import slide_window_rate_limiter
 from zhconv import convert
-from urllib.parse import quote_plus
 from abc import ABC, abstractmethod
 
 # TODO： 在DataSource中添加一个本地缓存目录，将从 API 获取的封面图片保存为文件（如 cache/thumbnails/{subject_id}_{image_size}.jpg），下次直接读取本地文件，避免重复请求
@@ -85,7 +84,7 @@ class BangumiApiDataSource(DataSource):
         # 反面例子：君は淫らな僕の女王 -> 君は淫らな仆の女王，47331
         query = convert(query, "zh-cn")
         url = f"{self.BASE_URL}/v0/search/subjects?limit=10"
-        payload = {"keyword": query,"filter":{"type":[1]}}
+        payload = {"keyword": query, "filter": {"type": [1]}}
 
         # TODO 处理特殊字符：'citrus+ ~柑橘味香气plus~'
         try:
@@ -106,7 +105,7 @@ class BangumiApiDataSource(DataSource):
             results = response_json["data"]
 
         return resort_search_list(
-            query=query, results=results, threshold=threshold, data_source=self, is_novel=is_novel
+            query=query, results=results, threshold=threshold, is_novel=is_novel
         )
 
     @slide_window_rate_limiter()
@@ -148,8 +147,7 @@ class BangumiApiDataSource(DataSource):
         url = f"{self.BASE_URL}/v0/users/-/collections/{subject_id}"
         payload = {"vol_status": progress}
         try:
-            response = self.r.patch(
-                url, headers=self._get_headers(), json=payload)
+            response = self.r.patch(url, headers=self._get_headers(), json=payload)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             logger.error(f"出现错误: {e}")
@@ -167,8 +165,9 @@ class BangumiApiDataSource(DataSource):
             if subject_metadata["images"]:
                 image = subject_metadata["images"][image_size]
             else:
-                image = self.get_subject_metadata(subject_metadata["id"])[
-                    "images"][image_size]
+                image = self.get_subject_metadata(subject_metadata["id"])["images"][
+                    image_size
+                ]
             thumbnail = self.r.get(image).content
         except Exception as e:
             logger.error(f"出现错误: {e}")
@@ -204,31 +203,17 @@ class BangumiArchiveDataSource(DataSource):
 
     # 将10s+的全文件扫描性能提升到1s左右
     def _get_search_results_from_archive(self, query):
-        return search_all_data(
-            file_path=self.subject_metadata_file, query=query
-        )
+        return search_all_data(file_path=self.subject_metadata_file, query=query)
 
     def search_subjects(self, query, threshold=80, is_novel=False):
         """
         离线数据源搜索条目
         """
-        # 长度限制应搭配 threshold 使用, 于 resort_search_list() 中实现
-        search_results = []
         results = self._get_search_results_from_archive(query)
         for item in results:
-            result = {
-                "id": item["id"],
-                "url": r"http://bgm.tv/subject/" + str(item["id"]),
-                "type": item.get("type", 0),
-                "name": item.get("name", ""),
-                "name_cn": item.get("name_cn", ""),
-                "summary": item.get("summary", ""),
-                # 忽略 images 字段
-                "images": "",
-            }
-            search_results.append(result)
+            item["images"] = ""  # 忽略 images 字段
         return resort_search_list(
-            query=query, results=search_results, threshold=threshold, data_source=self, is_novel=is_novel
+            query=query, results=results, threshold=threshold, is_novel=is_novel
         )
 
     def get_subject_metadata(self, subject_id):
@@ -336,8 +321,7 @@ class BangumiDataSourceFactory:
         online = BangumiApiDataSource(config.get("access_token"))
 
         if config.get("use_local_archive", False):
-            offline = BangumiArchiveDataSource(
-                config.get("local_archive_folder"))
+            offline = BangumiArchiveDataSource(config.get("local_archive_folder"))
             return FallbackDataSource(offline, online)
 
         return online
@@ -367,7 +351,9 @@ class FallbackDataSource(DataSource):
         return result
 
     def search_subjects(self, query, threshold=80, is_novel=False):
-        return self._fallback_call("search_subjects", query, threshold=threshold, is_novel=is_novel)
+        return self._fallback_call(
+            "search_subjects", query, threshold=threshold, is_novel=is_novel
+        )
 
     def get_subject_metadata(self, subject_id):
         return self._fallback_call("get_subject_metadata", subject_id)
